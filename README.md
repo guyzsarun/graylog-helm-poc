@@ -17,3 +17,14 @@ Install graylog
 ```bash
 helm install graylog ./graylog --values ./graylog/values.yaml --namespace "graylog"
 ```
+
+Deploy Sample Application
+
+```bash
+kubectl apply -f demo-app -n demo-graylog-app
+```
+
+## Configuration
+
+- Config Graylog Input as `GELF` port `12222`
+- (Optional) Add extractor to parse LogLevel, Message

@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: application
+  name: application
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: application
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: application
+    spec:
+      containers:
+        - image: chentex/random-logger:latest
+          name: tmp
+          command:
+            - /bin/sh
+          args:
+            - -c
+            - >
+              /entrypoint.sh 100 5000
+              >> /var/log/random-logger.log;
+          volumeMounts:
+            - name: varlog
+              mountPath: /var/log
+          resources:
+            limits:
+              memory: "64Mi"
+              cpu: "200m"
+        - name: logging-agent
+          image: fluent/fluentd-kubernetes-daemonset:v1.14-debian-graylog-1
+          env:
+            - name: FLUENTD_CONF
+              value: fluentd.conf
+          volumeMounts:
+            - name: varlog
+              mountPath: /var/log
+            - name: config-volume
+              mountPath: /fluentd/etc
+          ports:
+            - name: logging
+              containerPort: 12222
+              protocol: UDP
+          resources:
+            limits:
+              memory: "64Mi"
+              cpu: "200m"
+      volumes:
+        - name: varlog
+          emptyDir: {}
+        - name: config-volume
+          configMap:
+            name: fluentd-config

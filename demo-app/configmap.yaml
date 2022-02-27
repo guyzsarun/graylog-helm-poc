@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentd-config
+data:
+  fluentd.conf: |
+    <source>
+      @type tail
+      format none
+      path /var/log/random-logger.log
+      pos_file /var/log/random-logger.log.pos
+      tag random.logger
+    </source>
+
+
+    <match random.**>
+      @type gelf
+      host graylog-input-udp.graylog.svc.cluster.local
+      port 12222
+
+    </match>

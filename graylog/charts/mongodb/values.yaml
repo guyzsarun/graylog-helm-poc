@@ -30,7 +30,7 @@ nameOverride: ""
 fullnameOverride: ""
 ## @param clusterDomain Default Kubernetes cluster domain
 ##
-clusterDomain: cluster.local
+clusterDomain: managedcluster.local
 ## @param extraDeploy Array of extra objects to deploy with the release
 ## extraDeploy:
 ## This needs to be uncommented and added to 'extraDeploy' in order to use the replicaset 'mongo-labeler' sidecar
